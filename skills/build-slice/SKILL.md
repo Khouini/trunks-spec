@@ -16,13 +16,13 @@ Work on exactly ONE slice per session. **No code (app code, database changes, te
 Follow `~/.claude/workflow/steps/decide.md` with the **Code** questions, after reading the reference feature, every file the slice will change and the latest version of any database logic it touches. Architecture choices were made in `05-design.md`; don't reopen them unless the code shows a problem. **STOP** until every choice has a decision; if I describe how I want something implemented, that is the decision.
 
 ## 2. Slice plan ⛔
-Create `slices/slice-<n>.md` from `~/.claude/workflow/templates/feature/slices/slice-N.md` and fill it with `~/.claude/workflow/steps/plan.md`, **form B** (+ form A for edits to existing code): §1 the choices and my decisions, §2 database, §3 code, §4 API contract, §5 files, §6 tests (unit test names starting with the rule ID, `"BR-03: …"`; `test-guide.md` scenarios for what the suite can't reach), §7 not in this slice. Status "Plan", update `progress.md`. **STOP** until I say approved; then status "Approved".
+Create `slices/slice-<n>.md` from `~/.claude/workflow/templates/feature/slices/slice-N.md` and fill it with `~/.claude/workflow/steps/plan.md`, **form B + form A for risky code**, with the size line: §1 the choices and my decisions, §2 database, §3 code, §4 API contract, §5 files, §6 tests (unit test names starting with the rule ID, `"BR-03: …"`; `test-guide.md` scenarios for what the suite can't reach), §7 not in this slice. Status "Plan", update `progress.md`. **STOP** until I say approved; then status "Approved".
 
 ## 3. Build ⛔ diff
 Follow `~/.claude/workflow/steps/apply.md` (track: big feature):
 - tests first (they must fail), scenarios in `docs/features/<feature>/test-guide.md`, runnable requests updated;
 - database change (`~/.claude/workflow/database.md`), then **STOP** for me to apply it on dev, once;
-- code exactly as the plan; deviations in §8 after my approval; verify; self-review (the `code-reviewer` subagent for larger slices, with the slice plan);
+- code as the plan; deviations in §8 after my approval; verify; self-review (the `code-reviewer` subagent for larger slices, with the slice plan);
 - docs: `docs/system/`, runnable requests, listed in the feature README;
 - hand-over: §9 "Plan vs done", status "Built", **STOP** for my diff review.
 

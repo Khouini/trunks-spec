@@ -37,6 +37,11 @@ for s in skills/*/SKILL.md; do
   }
 done
 
+tests/hook.sh >/dev/null || {
+  echo "The stop hook failed its tests: run tests/hook.sh"
+  fail=1
+}
+
 # Private words: every file, packs and history notes included. LICENSE names its holder.
 if [[ -f .check-words.local ]]; then
   private=$(find . -type f -not -path './.git/*' -not -name '.check-words.local' -not -name 'LICENSE' -exec grep -nIHiE -f .check-words.local {} + || true)

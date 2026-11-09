@@ -4,6 +4,20 @@ Copy this section into the project's `CLAUDE.md`, then fill it. The kit's steps 
 
 **These rules only add to the global `CLAUDE.md`. They never contradict it:** when two instructions conflict, Claude may follow either. A heading that doesn't apply says "None."
 
+**Stop check:** so Claude can't finish without hearing that tests fail, add this hook to the project's `.claude/settings.json`, with your test command. It runs only when code changed. It lives in the project so that Claude Code's trust prompt covers it. Skip tests known to fail in the command itself.
+
+```json
+{
+  "hooks": {
+    "Stop": [{ "hooks": [{
+      "type": "command",
+      "timeout": 600,
+      "command": "s=\"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/workflow/hooks/stop-check.sh\"; [ ! -x \"$s\" ] || \"$s\" 'make test'"
+    }]}]
+  }
+}
+```
+
 ```markdown
 ## Project rules
 

@@ -10,7 +10,8 @@ trunks-spec is one way of working with [Claude Code](https://claude.com/claude-c
 
 | Benefit | Without it | With it |
 |---|---|---|
-| **No surprise code** | Claude writes first, you find out after | You see the exact code before it is written |
+| **No surprise code** | Claude writes first, you find out after | You approve a short plan before any code is written |
+| **Simple code** | Layers and helpers nobody asked for | Least code, every changed line traces to the request, and the reviewer blocks the rest |
 | **Your decisions stay yours** | Claude picks names and solutions alone | Claude asks, with 2-3 options, an example and its advice |
 | **Fewer silly questions** | Claude asks what the code already answers | Claude reads first and asks only what you alone know |
 | **Short answers** | Long messages to read | 10 lines or fewer when it needs you, in plain English |
@@ -31,9 +32,9 @@ You type this in your project:
 
 1. **Claude looks at the code** and says: "This changes how something already works, so it is a Change. About 3 files." You say OK.
 2. **It shows what it understood.** "Order at 15:00, shop closes at 18:00: today it is accepted, after the change it is refused." It also asks what the code can't tell it: "Can staff still order after the limit? I think yes." You answer. ⛔
-3. **It proposes how to build it.** Your choices are numbered, including every new name: "Error name? a) `ORDER_CUTOFF` b) `TOO_LATE`. I pick a." You pick. ⛔
-4. **It writes the plan: the exact code, before and after.** Nothing is changed yet. You read it and approve. ⛔
-5. **It writes the code, exactly as planned,** with tests first, then shows you the changes. If it needs anything else, it stops and asks. You correct an error message on the way; it fixes it and quietly notes this in `learn.md`. ⛔
+3. **It proposes how to build it.** Your choices are numbered, including every new name: "Error name? a) `ORDER_CUTOFF` b) `TOO_LATE`. I pick a." You pick. ⛔ With nothing to decide, it skips this stop.
+4. **It writes a short plan:** which functions change, the tests and the size: "+40/-5, 2 files. Simpler option rejected: …". Exact code only for database changes, permission checks and public contracts. Nothing is changed yet. You approve. ⛔
+5. **It writes the code as planned,** with tests first, cleans up what it touched, then shows you the changes in 5 lines or fewer. If it needs anything else, it stops and asks. You correct an error message on the way; it fixes it and quietly notes this in `learn.md`. ⛔
 6. **You approve and it commits.** It then drafts the changelog line, the message to whoever needs to know and the deploy checklist. You send and deploy.
 7. **It learns, if you agree.** "You corrected my error message. Should I add a rule: reuse the wording already in the file?" You say yes or no. ⛔
 
@@ -68,7 +69,7 @@ The kit says **how to work**. Each project says **its facts**.
 
 **Example.** The kit says "run the tests". Project A's `CLAUDE.md` says `make test`. Project B's says `npm test`. The same step works in both.
 
-A project's facts go in its `CLAUDE.md`, under a `## Project rules` heading. A project with that heading uses the full process. Any other project gets only the short answers and the asking rules, unless you type `/work`.
+A project's facts go in its `CLAUDE.md`, under a `## Project rules` heading. A project with that heading uses the full process. Any other project gets only the rules for short answers, asking and simple code, unless you type `/work`.
 
 **Any technology.** The core never names a language or a database. For exact rules on one technology, a project can use a pack: today there is one, [SQL Server](workflow/packs/sql-server/README.md), and [adding one is easy](workflow/packs/README.md).
 
@@ -86,9 +87,9 @@ You never need other commands: `/next` finds the right step.
 |---|---|---|---|
 | **Question** | You want to understand something | None | Nothing |
 | **Trivial** | Small and obvious, 2 code files or fewer, no database or contract change | None | The change, then the result |
-| **Bug** | It doesn't work as it should | `bug.md` | The cause, the fix, the code, the result, what to learn |
-| **Change** | It works, but should work differently | `change.md` | The scope, the solution, the code, the result, what to learn |
-| **Small feature** | Something new, about 10 files or fewer | `feature.md` | The needs, the solution, the code, the result, what to learn |
+| **Bug** | It doesn't work as it should | `bug.md` | The cause, the fix, the plan, the result, what to learn |
+| **Change** | It works, but should work differently | `change.md` | The scope, the solution, the plan, the result, what to learn |
+| **Small feature** | Something new, about 10 files or fewer | `feature.md` | The needs, the solution, the plan, the result, what to learn |
 | **Big feature** | Something new, several stories | One folder, built piece by piece | The same, for each piece |
 
 **Words you will see:**
@@ -140,11 +141,13 @@ This removes only what the kit added. Your own lines stay.
 
 **Add a project:** open it and type `/work <anything>`. Claude offers to add `## Project rules`, filled from what it sees in the code. You check it.
 
+**Stop check (a project can turn it on):** a hook that runs your tests when Claude finishes and the code changed. If they fail, Claude hears it and must fix them or say why they fail. [Set it up](workflow/PROJECT_RULES_TEMPLATE.md).
+
 ## Keep it up to date
 
 - **Change a rule that fits every project:** edit it in the kit, run `./check.sh`, add a line to `CHANGELOG.md`, commit and push. New sessions use it. Other machines run `git pull`.
 - **Change a fact about one project:** edit that project's `CLAUDE.md`.
-- `./check.sh` fails if the core names one technology, if a file the kit names is missing, or if a command lost its safety line. To keep your own company words out, list them in `.check-words.local`, which is never committed.
+- `./check.sh` fails if the core names one technology, if a file the kit names is missing, if a command lost its safety line or if the stop hook broke. After changing a rule, `tests/work.sh` checks that `/work` still picks the right track (real Claude runs, so it costs tokens). To keep your own company words out, list them in `.check-words.local`, which is never committed.
 
 **Example:** "ask about every new name" goes in the kit. "Tests run with `make test`" goes in the project.
 
@@ -170,7 +173,8 @@ This removes only what the kit added. Your own lines stay.
 | `workflow/database.md` | The rules for any database change: [see them](workflow/database.md) |
 | `workflow/PROJECT_RULES_TEMPLATE.md` | What a project fills in: [see it](workflow/PROJECT_RULES_TEMPLATE.md) |
 | `workflow/handover-package.md` | How to hand work over to other developers: [see it](workflow/handover-package.md) |
-| `install.sh`, `check.sh` | Install the kit, check the kit |
+| `workflow/hooks/stop-check.sh` | The stop check |
+| `install.sh`, `check.sh`, `tests/` | Install the kit, check the kit, test how it behaves |
 
 ## Help make it better
 

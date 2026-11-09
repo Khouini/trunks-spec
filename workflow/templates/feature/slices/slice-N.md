@@ -4,6 +4,7 @@
 - **Stories / rules:** US-.., BR-..
 - **Reference code (pattern to copy):** `<file:line>`
 - **Commit:**
+- **Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
 
 > No code is written until this plan is **Approved**. While coding, anything that differs from this plan (new file, different signature, different approach) stops for your approval and is recorded in §8.
 

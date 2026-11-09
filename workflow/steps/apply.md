@@ -1,4 +1,4 @@
-# Step: apply (write exactly the plan) ⛔ diff
+# Step: apply (write what the plan says) ⛔ diff
 
 | Track | Plan | Deviations | Plan vs done | Hand-over status | Commit |
 |---|---|---|---|---|---|
@@ -26,9 +26,9 @@
 - Never edit a change already applied anywhere. Project rules: Database names what else not to touch.
 - **You don't apply database changes** (unless Project rules: Database allows it on a local database). STOP and give me the files to apply on dev, in order, once, then the runnable request (or the plan's diagnostics query, if any) with its expected result. A data repair runs on dev only if the bad data exists there; otherwise I review it by reading. Wait for my confirmation.
 
-## 3. Code: exactly the plan
-- Write the planned code, nothing more. Allowed without asking: the formatter and import ordering. A generated-code step in Project rules: Plan details runs with the change.
-- **Deviation rule:** anything else (another file, a different line or signature, an extra helper, a different approach, a missing parameter) → STOP, explain what and why, ask. Once I approve, record it in the Deviations section, then continue. Never deviate silently.
+## 3. Code: as the plan says
+- Write the planned code, nothing more, following "How Claude writes code" (`CLAUDE.md`). Exact code (form A) is written as approved. Function bodies of a short plan (form B) are yours to write. Allowed without asking: the formatter and import ordering. A generated-code step in Project rules: Plan details runs with the change.
+- **Deviation rule:** anything else (another file, a different signature, an extra helper, a different approach, a line of exact code, well over the Size line) → STOP, explain what and why, ask. Once I approve, record it in the Deviations section, then continue. Never deviate silently.
 - Stay in scope. Something else needs changing or looks wrong? List it (open questions, or the Backlog of `docs/bugs/README.md`); don't do it.
 
 ## 4. Verify
@@ -36,9 +36,11 @@
 - Project rules: Stack and commands: the full suite (known failures allowed, report anything else), format and vet on touched code, the build.
 - The docs check, if the project has one, passes. A problem in a doc this item touched, or one its code change broke (a renamed file, a changed constant), is fixed in this item.
 - NEVER change or delete existing tests to make them pass without asking me. If the same fix fails twice, stop and explain.
+- **Clean-up, once tests pass:** simplify only the code this item touched, without changing what it does. Example: two repeated blocks in the function you just changed become one. Exact code stays as approved. Run the tests again.
 
 ## 5. Self-review
-- The diff against the plan, line by line: everything planned is done, nothing done that isn't planned or recorded as a deviation.
+- The diff against the plan: everything planned is done, exact code matches line by line, nothing done that isn't planned or recorded as a deviation. Real size against the Size line.
+- Could it be simpler? Any line that doesn't trace to the request goes.
 - Edge cases, errors, nulls, permissions, concurrency, transactions, and Project rules: Review points. Security: no query built as a string from input, authorization, no sensitive data in logs. Cross-repo: no consumer broken (Project rules: Consumers to check).
 - Bug: the root cause is fixed, not only the symptom; every affected row of §4 is handled or listed as a follow-up.
 - Anything beyond a one-function change: run the `code-reviewer` subagent with the item doc (and the slice plan) and fix its blocking findings; tell me the others.
@@ -51,7 +53,7 @@
 
 ## 7. Hand over
 - Fill "Plan vs done": each plan item → where it is implemented → done / deviated / not done (why).
-- Give me, short (15 lines or fewer): what was done in 2-3 lines, `git diff --stat`, the tests (failed before, pass now), the database files to apply in order, deviations (or "none"), what to check on dev. The rest is in the doc.
+- Give me 5 lines or fewer: what changed, the test result (the command and its result), what I need to do (database files in order, what to check on dev). The rest is in the doc.
 - Status as in the table, `Next:` diff review. **STOP** for my review of the diff.
 
 ## 8. After my approval

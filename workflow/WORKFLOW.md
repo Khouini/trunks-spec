@@ -28,7 +28,7 @@ Every track is a recipe over the same eight steps (`~/.claude/workflow/steps/`),
 | **understand** ⛔ | | `/investigate-bug`: root cause | current vs wanted | light requirements (+ `/client-validation` if needed) | `/analyze-client-emails`, (`/client-questions`), `/write-requirements`, `/client-validation` |
 | **impact** | | blast radius, in `/investigate-bug` | with understand | with decide | `/impact-analysis` |
 | **decide** ⛔ | | `/plan-fix` | ✓ | ✓ (architecture + code) | `/design-feature`, then `/build-slice` per slice |
-| **plan** ⛔ | exact code, in chat | `/plan-fix`: exact code | exact code | code-level plan | `/build-slice`: slice plan |
+| **plan** ⛔ | exact code, in chat | `/plan-fix`: short plan | short plan | short plan | `/build-slice`: slice plan |
 | **apply** ⛔ diff | ✓ | `/fix-bug` | ✓ | ✓ | `/build-slice` per slice, then `/final-review` |
 | **ship** | changelog line if visible | `/ship-fix` | ✓ | ✓ | `/deliver-feature` |
 | **learn** ⛔ | | ✓ | ✓ | ✓ | `/close-feature`, then ✓ |
@@ -38,10 +38,10 @@ Every track is a recipe over the same eight steps (`~/.claude/workflow/steps/`),
 ### The same four approvals everywhere
 1. ⛔ **Understand**: the root cause (bug), the scope (change), the requirements (feature).
 2. ⛔ **Decide**: how it's done. Claude shows its recommendation and at most 2 alternatives (your way included, if you gave one). You pick, or say "ok". Your decision stands.
-3. ⛔ **Plan**: the code before it exists. Current → new for every edit; for new code, the code-level plan (types, signatures, database inputs and outputs, query logic, files, tests).
-4. ⛔ **Diff**: the code is exactly the plan. Any difference stopped for your approval and is recorded in the doc.
+3. ⛔ **Plan**: the code before it exists, short: signatures, files, tests and a size line. Exact code (current → new) only for database changes, permission checks and public contracts.
+4. ⛔ **Diff**: the real code, which follows the plan. Any difference stopped for your approval and is recorded in the doc.
 
-Nothing is written in the code or the database files before approval 3. A trivial item has only 3 and 4, in chat. Where there is only one sensible option and you already said how, approval 2 is one line.
+Nothing is written in the code or the database files before approval 3. A trivial item has only 3 and 4, in chat. With nothing to decide, approval 2 is skipped: the facts are recorded and the plan comes next.
 
 ## 3. Status → next step
 
@@ -50,7 +50,7 @@ Each item's header has a `Next:` line, updated at the end of every step. When it
 | Track | Status | Next |
 |---|---|---|
 | Bug | Reported, Investigating | `/investigate-bug` → ⛔ cause |
-| | Cause confirmed, Solution, Plan | `/plan-fix` → ⛔ solution, ⛔ exact code |
+| | Cause confirmed, Solution, Plan | `/plan-fix` → ⛔ solution (if there is something to decide), ⛔ plan |
 | | Approved | `/fix-bug` → ⛔ diff → commit |
 | | Fixed (committed) | `/ship-fix` |
 | | Shipped | learn → ⛔ each remark, then done |
@@ -98,15 +98,15 @@ Everything for one bug is in **one file**: `docs/bugs/YYYY-MM-DD-<name>/bug.md` 
 |---|---|---|---|---|
 | 1 | `/start-bug <what's wrong>` | `bug.md` §1 + index row | Correct the severity or branch if wrong, answer **TO ASK** | |
 | 2 | `/investigate-bug` | §2 call path, hypotheses, evidence · §3 root cause · §4 blast radius | 👤 Run the queries / log commands, if any, paste results | ⛔ cause |
-| 3 | `/plan-fix` | §5 recommendation + options (your way if given) · §6 exact code current → new, database change, data repair, regression test | Pick an option or give your way, review every line | ⛔ solution, ⛔ exact code |
-| 4 | `/fix-bug` | test (fails) → database change → code exactly as §6 → verify → §8 | 👤 Apply the database change on dev, review the diff | ⛔ diff |
+| 3 | `/plan-fix` | §5 recommendation + options (your way if given) · §6 short plan, size line, database change, data repair, regression test | Pick an option or give your way, review the plan | ⛔ solution (if there is something to decide), ⛔ plan |
+| 4 | `/fix-bug` | test (fails) → database change → code as §6 → verify → §8 | 👤 Apply the database change on dev, review the diff | ⛔ diff |
 | 5 | `/ship-fix` | §9 reply draft + deploy checklist · changelog | 👤 Send the reply, apply the database change in prod, deploy, verify | |
 | 6 | `/next` | learn: Claude's remarks from `learn.md`, each with the exact text to add | Say yes or no to each | ⛔ each remark |
 
 - **Severity:** **P1** production blocked or data getting corrupted now · **P2** wrong, with a workaround · **P3** minor.
 - **Root cause:** it must explain **every** symptom, with evidence (`file:line`, query result, log). A diagnostic query only when the code can't prove it and the answer changes the fix; read-only; you paste IDs and counts, never personal data.
 - **Blast radius:** other callers, other repos, how many rows are already wrong, what was already sent wrong.
-- **P1 hotfix:** mitigate first if possible (redeploy the previous commit, undo the last set (the `UNDO:` line of each file), a manual workaround, Project rules: Deploy). Root cause and solution can come in one message. **The exact-code approval is never skipped.** Deploy, then finish §8-§10.
+- **P1 hotfix:** mitigate first if possible (redeploy the previous commit, undo the last set (the `UNDO:` line of each file), a manual workaround, Project rules: Deploy). Root cause and solution can come in one message. **The plan approval is never skipped.** Deploy, then finish §8-§10.
 - **Data repair:** its own script, after the fix (so no new bad rows appear): preview count first, old values kept, and its `UNDO:` line restores them. Rules: `~/.claude/workflow/database.md`.
 - Found something else while fixing? It goes to the **Backlog** of `docs/bugs/README.md`, not into this fix.
 
@@ -118,9 +118,9 @@ Existing behavior should work differently. Everything in **one file**: `docs/cha
 | # | You type | Claude writes | Your job | Gate |
 |---|---|---|---|---|
 | 1 | `/work <what should change>` | §1 request, current vs wanted with before/after examples · §2 impact: who sees the difference, data and consumers, existing data, API contract, size | Check the examples and who is affected | ⛔ scope |
-| 2 | `/next` | §3 recommendation + options, decisions | Decide | ⛔ |
-| 3 | `/next` | §4 exact code current → new, database change, data change, tests, docs | Review every line | ⛔ |
-| 4 | `/next` | tests → database change → code exactly as §4 → verify → §6 plan vs done | 👤 Apply the database change on dev, review the diff | ⛔ diff |
+| 2 | `/next` | §3 recommendation + options, decisions | Decide | ⛔ if there is something to decide |
+| 3 | `/next` | §4 short plan, size line, database change, data change, tests, docs | Review the plan | ⛔ |
+| 4 | `/next` | tests → database change → code as §4 → verify → §6 plan vs done | 👤 Apply the database change on dev, review the diff | ⛔ diff |
 | 5 | `/next` | §7 changelog ("Changed"), notice to whoever sees the difference, deploy checklist | 👤 Send the notice, apply the database change in prod, deploy | |
 | 6 | `/next` | learn: Claude's remarks from `learn.md`, each with the exact text to add | Say yes or no to each | ⛔ each remark |
 
@@ -132,9 +132,9 @@ Something new that fits one slice. Everything in **one file**: `docs/features/YY
 | # | You type | Claude writes | Your job | Gate |
 |---|---|---|---|---|
 | 1 | `/work <the new need>` | §1 request · §2 stories, rules, examples (normal, edge, failure), out of scope | Review the examples: they become the tests. Client must confirm? `/client-validation` drafts the email | ⛔ requirements |
-| 2 | `/next` | §3 impact · §4 options for architecture and code, decisions | Decide | ⛔ |
-| 3 | `/next` | §5 code-level plan: the database change, types, signatures, entry point, public contract, files, tests | Review every line | ⛔ |
-| 4 | `/next` | tests → database change → code exactly as §5 → verify → docs, runnable requests → §7 plan vs done | 👤 Apply the database change on dev, review the diff | ⛔ diff |
+| 2 | `/next` | §3 impact · §4 options for architecture and code, decisions | Decide | ⛔ if there is something to decide |
+| 3 | `/next` | §5 short plan: size line, the database change, types, signatures, entry point, public contract, files, tests | Review the plan | ⛔ |
+| 4 | `/next` | tests → database change → code as §5 → verify → docs, runnable requests → §7 plan vs done | 👤 Apply the database change on dev, review the diff | ⛔ diff |
 | 5 | `/next` | §8 changelog ("Added"), short delivery note per audience, deploy checklist | 👤 Send, apply the database change in prod, deploy | |
 | 6 | `/next` | learn: Claude's remarks from `learn.md`, each with the exact text to add | Say yes or no to each | ⛔ each remark |
 

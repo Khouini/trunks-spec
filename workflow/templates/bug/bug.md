@@ -10,7 +10,7 @@
 - **Commit:**
 - **Version:**
 
-> Gates: you confirm the root cause (§3), decide the solution (§5) and approve the exact code (§6). Nothing is applied before §6 is **Approved**, and the code written is exactly §6. Any difference stops for your approval and goes in §7.
+> Gates: you confirm the root cause (§3), decide the solution (§5) if there is something to decide, and approve the plan (§6). Nothing is applied before §6 is **Approved**. Any difference from it stops for your approval and goes in §7.
 
 ## 1. Report
 
@@ -86,11 +86,15 @@
 | 2 | Repair existing data? Which rows? | |
 | 3 | Guard so it can't come back? | |
 
-## 6. Exact implementation ⛔ approved by you
+## 6. Plan ⛔ approved by you
 
-### Change 1: `<file>`, `<function or fragment>`
-Why:
+**Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
 
+### Code
+| File | Function: signature (current → new) | What changes | Reuses |
+|---|---|---|---|
+
+### Exact code (only permission checks and public contracts; remove if none)
 **Current** (`<file>:<line>`)
 ```
 ```
@@ -116,13 +120,7 @@ Why:
 | Test | Input | Expected | Fails before the fix because |
 |---|---|---|---|
 
-```
-// full test code; for what the suite can't reach: manual scenario + runnable request (diagnostics Qn only if stored data is wrong)
-```
-
-### Files
-| File | Create / change | What |
-|---|---|---|
+For what the suite can't reach: manual scenario + runnable request (diagnostics Qn only if stored data is wrong).
 
 ### Not changed (on purpose)
 

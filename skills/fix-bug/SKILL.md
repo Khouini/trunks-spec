@@ -1,6 +1,6 @@
 ---
 name: fix-bug
-description: Apply an approved bug fix exactly as written in bug.md §6. Regression test first (it must fail), then database change + data repair, then the code, then tests, vet, build, self-review and a plan-vs-done hand-over for diff review, then commit. Use when the user approves a fix plan or says "apply the fix", even if they don't name this skill. Only in a repo whose CLAUDE.md has a Project rules section, or when the user types this command.
+description: Apply an approved bug fix as planned in bug.md §6. Regression test first (it must fail), then database change + data repair, then the code, then tests, vet, build, self-review and a plan-vs-done hand-over for diff review, then commit. Use when the user approves a fix plan or says "apply the fix", even if they don't name this skill. Only in a repo whose CLAUDE.md has a Project rules section, or when the user types this command.
 ---
 
 # Apply the fix

@@ -8,7 +8,7 @@
 - **Commit:**
 - **Version:**
 
-> Gates: you confirm the scope (§1-§2), decide the solution (§3) and approve the exact code (§4). Nothing is applied before §4 is **Approved**, and the code written is exactly §4. Any difference stops for your approval and goes in §5.
+> Gates: you confirm the scope (§1-§2), decide the solution (§3) if there is something to decide, and approve the plan (§4). Nothing is applied before §4 is **Approved**. Any difference from it stops for your approval and goes in §5.
 
 ## 1. Request ⛔ confirmed by you
 
@@ -63,11 +63,15 @@ Every implementation choice and every new name (API fields, columns, commands, e
 | # | Question | Your decision |
 |---|---|---|
 
-## 4. Exact implementation ⛔ approved by you
+## 4. Plan ⛔ approved by you
 
-### Change 1: `<file>`, `<function or fragment>`
-Why:
+**Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
 
+### Code
+| File | Function: signature (current → new) | What changes | Reuses |
+|---|---|---|---|
+
+### Exact code (only permission checks and public contracts; remove if none)
 **Current** (`<file>:<line>`)
 ```
 ```
@@ -90,13 +94,7 @@ Why:
 | Test (`"CHANGE: …"`) / scenario | Example | Input | Expected | Fails before because |
 |---|---|---|---|---|
 
-```
-// full test code; for what the suite can't reach: test-guide scenario + runnable request (diagnostics query only if stored data is wrong)
-```
-
-### Files
-| File | Create / change | What |
-|---|---|---|
+For what the suite can't reach: test-guide scenario + runnable request (diagnostics query only if stored data is wrong).
 
 ### Docs to update
 

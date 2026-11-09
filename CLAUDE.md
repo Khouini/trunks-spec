@@ -24,12 +24,18 @@ These hold in every project. A project's `CLAUDE.md` adds to them and never cont
 - **Every question comes with your answer**, numbered, at the end: `1. Severity P2 (a workaround exists). OK?`. No limit on the number, but only important questions: never ask what the code answers. My "ok" accepts all of them. Wait for my answer before the next step.
 - **Defaults are not questions.** Branch (the current one; `feature/<name>` for a feature), severity, version, the next slice, the delivery audiences: write your pick in one line; I correct it if it's wrong. Defaults are only these process choices, never a behavior or a solution choice.
 
+## How Claude writes code
+- **Least code.** Pick what adds the fewest lines and still does the job. Reuse what exists first. Example: one check in `saveOrder`, which every path calls, not a check in each of 5 paths.
+- **Only what is needed now.** No abstraction with one use, no option nobody asked for, no handling for a case that can't happen. Example: not `CutoffPolicy` with a factory, but `checkCutoff(order, shop)`.
+- **Every changed line traces to the request.** Anything else you notice is listed, not done.
+- **Clean up only what you touched, after tests pass.** Example: two repeated blocks in the function you just changed become one. The 2,000-line file next to it stays.
+
 ## Claude's learning notes
 While you work on an item, whenever I correct you, you deviate from a plan, a rule is missing or wrong, or you make a mistake you notice: add one line to the item's `learn.md` (create it from `~/.claude/workflow/templates/learn.md` on the first note). Do it quietly: no message, no stop, no question. Apply my correction to the current work only. **Never change a rule, a skill or `CLAUDE.md` during the work.** The learn step at the end proposes the changes, and each needs my yes.
 
 ## When the tracks apply
 - **The repo's `CLAUDE.md` has a `## Project rules` section:** every piece of work starts with `/work <what>`, and the rest of this file holds.
-- **It doesn't:** only the two sections above hold, unless I type a track command. `/work` then offers to add the section from `~/.claude/workflow/PROJECT_RULES_TEMPLATE.md`.
+- **It doesn't:** only the sections above hold, unless I type a track command. `/work` then offers to add the section from `~/.claude/workflow/PROJECT_RULES_TEMPLATE.md`.
 - Quick questions and investigations need no item.
 
 ## Workflow
@@ -38,12 +44,12 @@ While you work on an item, whenever I correct you, you deviate from a plan, a ru
 | Track | When | Doc | Steps (⛔ = stop for approval) |
 |---|---|---|---|
 | Trivial | cause and change obvious, no database change, no contract change, 2 code files or fewer | none | exact change in chat ⛔ → apply → diff ⛔ → commit |
-| Bug | not working as designed or documented | `docs/bugs/YYYY-MM-DD-<name>/bug.md` | `/start-bug` → `/investigate-bug` ⛔ → `/plan-fix` ⛔⛔ → `/fix-bug` ⛔ → `/ship-fix` → learn ⛔ |
+| Bug | not working as designed or documented | `docs/bugs/YYYY-MM-DD-<name>/bug.md` | `/start-bug` → `/investigate-bug` ⛔ → `/plan-fix` ⛔ → `/fix-bug` ⛔ → `/ship-fix` → learn ⛔ |
 | Change | existing behavior should work differently; ~10 files or fewer, nothing new from Project rules: Words for size | `docs/changes/YYYY-MM-DD-<name>/change.md` | `/work` → scope ⛔ → decide ⛔ → plan ⛔ → apply ⛔ → ship → learn ⛔, each via `/next` |
 | Small feature | something new that fits one slice | `docs/features/YYYY-MM-<name>/feature.md` | `/work` → requirements ⛔ → impact + decide ⛔ → plan ⛔ → apply ⛔ → ship → learn ⛔, each via `/next` |
 | Big feature | several stories | `docs/features/YYYY-MM-<name>/` | the 11 phases below |
 
-Every track is a recipe over the same steps in `~/.claude/workflow/steps/` (`intake`, `understand`, `impact`, `decide`, `plan`, `apply`, `ship`, `learn`); the track skills call them, and `/next` runs them directly for changes and small features. An item that turns out to be on the wrong track is moved (`steps/intake.md`, "Moving an item"), carrying its content over.
+Every track is a recipe over the same steps in `~/.claude/workflow/steps/` (`intake`, `understand`, `impact`, `decide`, `plan`, `apply`, `ship`, `learn`); the track skills call them, and `/next` runs them directly for changes and small features. A decide stop with nothing to decide is skipped (`steps/decide.md`). An item that turns out to be on the wrong track is moved (`steps/intake.md`, "Moving an item"), carrying its content over.
 
 ### Big feature phases (one skill each)
 No client emails (your own idea, an issue)? Skip phases 2, 3, 3b and 5 and start `/write-requirements` from your description.
@@ -63,8 +69,8 @@ No client emails (your own idea, an issue)? Skip phases 2, 3, 3b and 5 and start
 ### Bug phases
 1. /start-bug       → bug.md §1 report, severity and branch (proposed defaults)
 2. /investigate-bug → call path, hypotheses, evidence, root cause, blast radius — STOP: user confirms the cause
-3. /plan-fix        → recommended fix + alternatives (the user's way if given) — STOP: user decides; then the exact code (current → new), database change, data repair, regression test — STOP for approval
-4. /fix-bug         → failing regression test → database change → code exactly as approved → verify — STOP for diff review — commit `fix(<scope>): …`
+3. /plan-fix        → recommended fix + alternatives (the user's way if given) — STOP if there is something to decide; then the short plan (exact code only for what is risky), database change, data repair, regression test — STOP for approval
+4. /fix-bug         → failing regression test → database change → code as approved → verify — STOP for diff review — commit `fix(<scope>): …`
 5. /ship-fix        → reply draft, changelog (patch version), deploy checklist
 6. learn            → Claude's remarks from `learn.md`, proposed one by one — STOP: nothing is added without your yes
 
@@ -83,7 +89,7 @@ Subagents: `code-reviewer` (read-only review of a slice, a fix, a change or the 
 
 ### Rules (every track)
 - Never write code before the item's plan is approved: `bug.md` §6, `change.md` §4, `feature.md` §5, `slices/slice-N.md`, or the exact change shown in chat for a trivial item. The plan comes after the understanding (root cause, scope or requirements, and the design for a big feature) is approved.
-- Implementation choices are discussed with the user before the plan is written; how the user wants it implemented is the decision. A plan holds the exact code (current → new) or, for new code, types, signatures, database inputs and outputs, query logic, files and tests.
+- Implementation choices are discussed with the user before the plan is written; how the user wants it implemented is the decision. A plan is short: signatures, files, tests and a size line, with exact code (current → new) only for database changes, permission checks and public contracts (`~/.claude/workflow/steps/plan.md`). The rest is reviewed in the real diff.
 - While coding, any deviation from the approved plan stops for approval and is recorded in the plan. Never deviate silently.
 - Big feature: one slice at a time. Don't start the next slice without approval.
 - Every session on an item starts by reading its doc (big feature: progress.md and the current slice plan).
@@ -104,9 +110,9 @@ Subagents: `code-reviewer` (read-only review of a slice, a fix, a change or the 
 - An item outgrowing its track (a bug or change needing something new from Project rules: Words for size or more than ~10 files; a small feature needing more than one slice) is moved, not stretched.
 
 ### Bug rules
-- No fix before the root cause is confirmed with evidence. No fix applied before its exact code (bug.md §6) is approved; the code written is exactly that, and any difference stops for approval (§7).
+- No fix before the root cause is confirmed with evidence. No fix applied before its plan (bug.md §6) is approved; any difference from it stops for approval (§7).
 - The user decides how it's fixed: show a recommendation and the alternatives worth knowing (the user's way, if given); the user's decision stands. Don't ask "how do you want it fixed?" before proposing.
 - Claude has no database access: diagnostic queries only when really needed ("How Claude asks"), read-only, in the item's `diagnostics.md`, run by the user; results recorded as IDs and counts, never personal data.
 - A regression test that fails before the fix, or for what the suite can't reach a runnable request or manual scenario (wrong before, right after). A diagnostics query only if stored data is wrong.
 - Data repair is its own script after the fix, with a preview count, the old values kept and an `UNDO:` line that restores them.
-- P1 hotfix: mitigate first; the exact-code approval is never skipped.
+- P1 hotfix: mitigate first; the plan approval is never skipped.

@@ -13,7 +13,7 @@
 - **Commit:**
 - **Version:**
 
-> Gates: you approve the requirements (§2), decide the solution (§4) and approve the code-level plan (§5). Nothing is applied before §5 is **Approved**, and the code written is exactly §5. Any difference stops for your approval and goes in §6.
+> Gates: you approve the requirements (§2), decide the solution (§4) if there is something to decide, and approve the plan (§5). Nothing is applied before §5 is **Approved**. Any difference from it stops for your approval and goes in §6.
 
 ## 1. Request
 
@@ -77,7 +77,9 @@ No client validation: <why> | Email draft (not sent): … | Client answer (YYYY-
 |---|---|---|---|---|
 | 1 | | A: … / B: … | | |
 
-## 5. Code-level plan ⛔ approved by you
+## 5. Plan ⛔ approved by you
+
+**Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
 
 ### Database (if any)
 The exact change. For logic in the database: inputs, outputs, errors, steps.
@@ -95,7 +97,7 @@ The exact change. For logic in the database: inputs, outputs, errors, steps.
 | Layer | Function | File | Signature | Does |
 |---|---|---|---|---|
 
-Edits to existing code (Current → New):
+Exact code, only for permission checks (Current → New; remove if none):
 
 ### Public contract
 **Request** / **Response** JSON, and:

@@ -18,8 +18,8 @@
    - **Bug:** fix at the root or guard at the symptom; in which layer; minimal now or the proper fix (the other as a follow-up); repair existing data or not, which rows (all, since a date, only the reported ones); for everyone or only the affected part; a guard so the bad data can't come back.
    - **Change:** in which layer; existing data follows the new rule (backfill) or only new rows; for everyone or behind a setting; keep the old behavior reachable or not; contract change or additive (new optional field); can the database change go ahead of the code deploy.
    - **Architecture:** which layer or service owns the logic; a new table/column or an existing one; a new package or extend one; synchronous or background; which store; which existing feature to copy.
-   - **Code:** extend an existing function or type, or add one; where validation goes; one function with a flag or two; response shape; type shapes and naming; error codes and statuses; what to reuse.
-5. **One sensible option and I already said how:** record it, say so in one line, skip the discussion.
+   - **Code:** extend an existing function or type, or add one; where validation goes; one function with a flag or two; response shape; type shapes and naming; error codes and statuses; what to reuse. Your recommendation is the option with the least code that does the job.
+5. **Nothing to decide:** no new name and no real choice, because every answer follows from my words, the code or an earlier decision. Record them as facts with their source, skip the STOP and go straight to the plan. Same for one sensible option when I already said how.
 6. Decisions made at an earlier level (`05-design.md` for a slice) are not reopened unless the code shows a problem; then say so.
 7. **STOP.** In chat (10 lines or fewer, no table): the recommendation in one line with its example, then the numbered questions. My "ok" accepts them all. Discuss until every question has a decision. Record in the doc my words ("What you want"), the options and the decisions (one line each). Status "Solution" (big feature: as its skill says), `Next:` plan.
 
