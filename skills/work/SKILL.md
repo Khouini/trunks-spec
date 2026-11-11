@@ -5,7 +5,7 @@ description: Single entry point for any piece of work on a project. Looks at the
 
 # Work: pick the track
 
-The tracks, their rules and their steps are in `~/.claude/workflow/WORKFLOW.md`. Read §1-§3 first.
+The tracks, their rules and their steps are in `~/.claude/workflow/WORKFLOW.md`. Read §1-§2 first.
 
 **No `## Project rules` section in this repo's `CLAUDE.md`?** Offer to add it from `~/.claude/workflow/PROJECT_RULES_TEMPLATE.md`, filled from what the code shows, and stop for my OK. Also offer `docs/bugs/`, `docs/changes/`, `docs/features/` with their index READMEs, `.correspondence/` in `.gitignore`, and a pack if `~/.claude/workflow/packs/` has one for its database.
 

@@ -43,44 +43,6 @@ Every track is a recipe over the same eight steps (`~/.claude/workflow/steps/`),
 
 Nothing is written in the code or the database files before approval 3. A trivial item has only 3 and 4, in chat. With nothing to decide, approval 2 is skipped: the facts are recorded and the plan comes next.
 
-## 3. Status → next step
-
-Each item's header has a `Next:` line, updated at the end of every step. When it is missing (older items), `/next` uses this table.
-
-| Track | Status | Next |
-|---|---|---|
-| Bug | Reported, Investigating | `/investigate-bug` → ⛔ cause |
-| | Cause confirmed, Solution, Plan | `/plan-fix` → ⛔ solution (if there is something to decide), ⛔ plan |
-| | Approved | `/fix-bug` → ⛔ diff → commit |
-| | Fixed (committed) | `/ship-fix` |
-| | Shipped | learn → ⛔ each remark, then done |
-| | Not a bug, Moved | done |
-| Change | Requested | understand + impact → ⛔ scope |
-| | Scope | waiting for your OK on §1-§2 |
-| | Scoped | decide → ⛔ |
-| | Solution | plan → ⛔ |
-| | Plan | waiting for your approval of §4 |
-| | Approved | apply → ⛔ diff |
-| | Built | waiting for your diff review, then commit |
-| | Committed | ship |
-| | Shipped | learn → ⛔ each remark, then done |
-| | Moved, Dropped | done |
-| Small feature | Requested | understand (requirements) → ⛔ |
-| | Requirements | waiting for your approval of §2 |
-| | Validation | waiting for the client (`/client-validation` records the answer) |
-| | Scoped | impact + decide → ⛔ |
-| | Solution → done | as a change, with the plan in §5 |
-| Big feature | Analysis | `/extract-client-requirements` (no `00`), `/analyze-client-emails` (no `01`) |
-| | Questions | waiting for the client (`/client-questions` records the answers), then `/write-requirements` |
-| | Requirements | `/write-requirements` → ⛔ |
-| | Validation | `/client-validation` → wait for the client |
-| | (validated) | `/impact-analysis` (no `04`), `/design-feature` (no `05`) → ⛔ |
-| | Design, In development | `/build-slice` until every slice in `progress.md` is Committed |
-| | Review | `/final-review` → ⛔ |
-| | (reviewed) | `/deliver-feature` |
-| | Delivered | `/close-feature` when feedback arrives |
-| | Closed | done |
-
 ---
 
 ## Question
@@ -172,13 +134,9 @@ Something with several stories. One folder `docs/features/YYYY-MM-<name>/` with 
 
 ## Rules to remember
 - **Never skip a ⛔.** If Claude moves on without approval, say: *"follow the STOP steps"*.
-- **Short, easy English, with examples. Claude asks, it doesn't assume:** facts from the code are not questions, but what the request leaves open (who, edge cases, what the user sees) are numbered questions. Every implementation choice and every new name (API fields, columns, commands, error codes, types) is a question with 2-3 options, each with an example and a recommendation: you pick. No limit, but only important questions. Rules: `CLAUDE.md`, "How Claude talks" and "How Claude asks". If Claude writes too much, say *"short"*; if it asks something the code answers, say *"look first"*.
-- **No code before the plan is approved**, and no silent deviation from it.
-- **Database:** never edit an applied change (write a new one), every file has an `UNDO:` line, schema and data changes in separate scripts.
-- **Tests:** what the suite can't reach is checked by hand on dev (`test-guide.md`, diagnostics queries, runnable requests). Project rules: Test rules.
-- **If Claude fails the same fix twice:** stop, `/clear`, restart with the exact error.
-- **If quality drops** in a long session: let Claude update the item doc, `/clear`, `/next`.
-- **Claude learns at the end, not during the work:** every correction goes as one line in the item's `learn.md`, quietly. At the learn step it proposes each one, with the exact text and where it goes (the kit, the project, a test). Nothing changes without your yes.
+- **Same fix fails twice:** stop, `/clear`, restart with the exact error.
+- **Quality drops in a long session:** let Claude update the item doc, `/clear`, `/next`.
+- The rest is in `CLAUDE.md` (talk, ask, code, rules).
 
 ## Where things are
 
