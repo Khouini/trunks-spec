@@ -23,6 +23,7 @@ The last step of every track. Nothing is added to any rule without my yes.
 3. **Propose in chat, 10 lines or fewer:** numbered, each with what happened, where it goes and the exact text to add. Example: `1. You corrected me twice on error names. Kit, CLAUDE.md "How Claude asks": "Error codes follow the names already in the file." Add it?`
 4. **STOP.** Wait for a yes or no on each. My "ok" accepts all of them. Silence is a no.
 5. **Apply only what I said yes to.**
+   - **Change a line, don't add one.** Merge into the rule it fits, or replace the line it makes old. Example: "Short sentences" becomes "15 words or fewer", not a new rule next to it. A rule file never grows without a reason.
    - Kit: find it with `readlink -f ~/.claude/workflow`; edit there, run its `check.sh`, add a line to its `CHANGELOG.md`. Don't commit it unless I say so.
    - Anything else: edit it in the project.
 6. **Record** my decision for each remark in `learn.md`. Keep the file: it is part of the item's history. `Next:` done, index row updated.

@@ -1,7 +1,7 @@
 # Learn: <item>
 
-Claude's remarks while working on this item. One line each, added quietly. Nothing here changes a rule until you say yes at the learn step.
+Claude's notes while working. One line each, added quietly. Nothing changes a rule until you say yes at the learn step.
 
-| # | Step | What happened | What I would change | Where it goes | Your decision |
-|---|---|---|---|---|---|
-| 1 | plan | You renamed my error code twice | Reuse the names already in the file | Kit | |
+Format: `N. <step>: what happened → what to change → where. [your decision]`
+
+1. plan: you renamed my error code twice → reuse the names already in the file → kit, `CLAUDE.md` "How Claude asks". []
