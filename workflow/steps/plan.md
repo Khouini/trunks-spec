@@ -4,7 +4,7 @@
 
 **Only what I decided.** Every name and every implementation choice in the plan comes from the decisions (`decide.md`). If the plan needs a name or a choice that isn't decided yet, stop before writing it and ask: 2-3 options, each with an example and your recommendation.
 
-**Mechanical change, nothing to decide** (a generator command, a rename, a one-line wiring): the plan is 2-3 lines in the doc (what runs, which files), applied at once. One stop, at the diff. Example: "Run `newsupplier acme 260`; it writes `src/acme/` and 2 config lines."
+**Mechanical change, nothing to decide** (a generator command, a rename, a one-line wiring): the plan is 2-3 lines in the doc (what runs, which files), applied at once. One stop, at the diff. Example: "Run the project's generator for `acme`; it writes the new folder and 2 config lines."
 
 | Track | Writes | Form |
 |---|---|---|
