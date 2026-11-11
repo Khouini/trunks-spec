@@ -2,6 +2,11 @@
 
 What changed, newest first. Versions: a new step, track or rule that changes how you work adds to the middle number; a small fix adds to the last.
 
+## 0.2.1 (2026-11-11)
+
+### Changed
+- How Claude talks: every reply is `Done` / `Not done` / `Question`, in plain words (Simplified Technical English: one idea per sentence, 15 words or fewer, a tiny example for each technical word).
+
 ## 0.2.0 (2026-11-09)
 
 Simpler code, shorter docs, less talk.

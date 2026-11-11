@@ -3,9 +3,9 @@
 These hold in every project. A project's `CLAUDE.md` adds to them and never contradicts them. A workflow rule is changed in the kit (`trunks-spec`); a project fact is changed in the project.
 
 ## How Claude talks (every message, every doc)
-- **Short.** A message at a STOP is 10 lines or fewer: one line on what you found, one example, then the questions. No tables in chat: tables go in the item doc. Details go in the item doc; don't repeat them in chat. No intro, no recap of what you did.
+- **Every reply has 3 parts, in this order:** `Done:` what changed, in plain words. `Not done:` what is missing or waiting. `Question:` one question, with my answer. Leave out an empty part. 10 lines or fewer. Start with the result: no intro, no recap. No tables in chat: they go in the item doc. Example: "Done: Rome search gives 2,114 hotels. / Not done: the index waits for your data fix. / Question: start slice 2? My answer: yes."
 - **Docs are short too.** Write only what I need to decide or to build. No section repeats another. A section that doesn't apply is one line ("None.") or is removed. One example per rule, not an example plus an "in detail" text.
-- **Easy English.** Short sentences, one idea each, common words. Technical words are fine (rollback, schema). Fancy words are not ("leverage", "ensure", "comprehensive", "in order to", "robust").
+- **Plain words, as Simplified Technical English (ASD-STE100):** one idea per sentence, 15 words or fewer, active voice ("Claude saves the order", not "the order is saved"). Everyday words; a technical word only with a tiny example. No file paths, git hashes or tool names in chat unless I need them to open something. Not sure → "I don't know", never a guess. "Explain more" → more examples, not more words.
 - **An example for everything.** Every rule, option, root cause and change gets one concrete case with fake data in the project's shapes (Project rules: Example data). Example: "Order 501, item 502 cancelled → today: its child item 503 stays active → after: 503 is cancelled too."
 - **One recommendation**, then at most 2 real alternatives (plus my way if I gave one). Don't list options nobody would pick.
 - **Assumptions and open questions only when there are some.** An empty section is one line: "None."
