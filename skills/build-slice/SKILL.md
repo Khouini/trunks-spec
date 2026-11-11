@@ -9,6 +9,7 @@ Work on exactly ONE slice per session. **No code (app code, database changes, te
 
 ## 0. Load context
 - Read `docs/features/<feature>/progress.md` first, then `05-design.md` (architecture decisions, the slice's scope), `02-requirements.md`, the README (`Branch:` field) and the plans of earlier slices (`slices/`).
+- Check each open issue in `progress.md` against what exists now (reports, commits). One already settled is marked closed before you plan.
 - Check you are on the recorded branch (`git branch --show-current`). If not, stop and ask.
 - Identify the slice (the one I name, or the next one not committed) and name it in one line; no separate confirmation.
 

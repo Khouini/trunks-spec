@@ -2,6 +2,11 @@
 
 What changed, newest first. Versions: a new step, track or rule that changes how you work adds to the middle number; a small fix adds to the last.
 
+## 0.3.1 (2026-11-11)
+
+### Changed
+- `/build-slice` step 0: check each open issue in `progress.md` against what exists now before planning.
+
 ## 0.3.0 (2026-11-11)
 
 Less to read, fewer stops.
