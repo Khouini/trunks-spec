@@ -24,7 +24,7 @@ These hold in every project. A project's `CLAUDE.md` adds to them and never cont
 - **Clean up only what you touched, after tests pass.**
 
 ## Rules (every track)
-- **No code before the plan is approved**, and no silent deviation from it: a difference stops for approval and is recorded in the plan.
+- **No code before the plan is approved**, and no silent deviation from it: a difference stops for approval and is recorded in the plan. A mechanical change with nothing to decide has one stop, at the diff (`steps/plan.md`).
 - **One slice at a time.** Every session on an item starts by reading its doc (big feature: `progress.md` and the current slice plan).
 - **Follow existing patterns.** Name the reference. Ask before a new library, pattern or architecture. Check `docs/decisions/` first.
 - **Never change or delete existing tests to make them pass** without asking. What the suite can't reach goes in `test-guide.md`, a diagnostics query or a runnable request, never in a fake test.

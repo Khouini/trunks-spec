@@ -16,6 +16,7 @@ Work on exactly ONE slice per session. **No code (app code, database changes, te
 Follow `~/.claude/workflow/steps/decide.md` with the **Code** questions, after reading the reference feature, every file the slice will change and the latest version of any database logic it touches. Architecture choices were made in `05-design.md`; don't reopen them unless the code shows a problem. **STOP** until every choice has a decision; if I describe how I want something implemented, that is the decision.
 
 ## 2. Slice plan ⛔
+A mechanical slice with nothing to decide (a generator command): the plan is 2-3 lines, built at once, one stop at the diff (`steps/plan.md`).
 Create `slices/slice-<n>.md` from `~/.claude/workflow/templates/feature/slices/slice-N.md` and fill it with `~/.claude/workflow/steps/plan.md`, **form B + form A for risky code**, with the size line: §1 the choices and my decisions, §2 database, §3 code, §4 API contract, §5 files, §6 tests (unit test names starting with the rule ID, `"BR-03: …"`; `test-guide.md` scenarios for what the suite can't reach), §7 not in this slice. Status "Plan", update `progress.md`. **STOP** until I say approved; then status "Approved".
 
 ## 3. Build ⛔ diff
