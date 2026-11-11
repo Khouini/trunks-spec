@@ -2,115 +2,67 @@
 
 **Write what you want first, then let the AI code from that.**
 
-It's the opposite of "vibe coding", where you ask the AI for code and fix whatever comes out.
-
-trunks-spec is one way of working with [Claude Code](https://claude.com/claude-code), shared by all your projects, in any technology. You describe what you want. Claude looks at the code, writes down a plan, and **changes nothing until you approve it**. Every decision stays in a short document in your project. Claude learns from your corrections, but only with your yes.
+trunks-spec is one way of working with [Claude Code](https://claude.com/claude-code), shared by all your projects, in any technology. You say what you want. Claude reads the code, writes a short plan, and **changes nothing until you approve it**. Every decision stays in a short document in your project.
 
 ## Why use it
 
-| Benefit | Without it | With it |
-|---|---|---|
-| **No surprise code** | Claude writes first, you find out after | You approve a short plan before any code is written |
-| **Simple code** | Layers and helpers nobody asked for | Least code, every changed line traces to the request, and the reviewer blocks the rest |
-| **Your decisions stay yours** | Claude picks names and solutions alone | Claude asks, with 2-3 options, an example and its advice |
-| **Fewer silly questions** | Claude asks what the code already answers | Claude reads first and asks only what you alone know |
-| **Short answers** | Long messages to read | 10 lines or fewer when it needs you, in plain English |
-| **A written memory** | The reason is lost when the chat ends | Each piece of work has a document: why, what, how |
-| **The right effort** | The same process for a typo and a big feature | Small work gets a small process |
-| **One fix, every project** | Copy each new rule to each project by hand | Change it once in the kit |
-| **Gets better as you work** | The same mistake comes back next week | Claude notes each correction and proposes a rule at the end |
-| **Any technology** | Rules tied to one stack | The kit names no stack; your project says what it uses |
-| **Safe by default** | Easy to run something by accident | Claude never applies database changes, sends emails or creates release tags: it prepares them, you do them |
+- **No surprise code.** You approve a short plan before any code exists.
+- **Simple code.** The fewest lines that do the job. The reviewer blocks the rest.
+- **Your decisions stay yours.** Claude asks, with 2-3 options, an example and its pick. It never asks what the code already says.
+- **Easy to read.** Every reply is `Done` / `Not done` / `Question`, in plain words, 10 lines or fewer.
+- **The right effort.** A typo gets a small process; a big feature gets a full one.
+- **It gets better.** Claude notes each correction and proposes a rule at the end. Nothing changes without your yes.
+- **Safe.** Claude never applies database changes, sends emails or deploys. It prepares them; you do them.
 
 ## A short story
-
-You type this in your project:
 
 ```text
 /work no orders less than 4 hours before closing
 ```
 
-1. **Claude looks at the code** and says: "This changes how something already works, so it is a Change. About 3 files." You say OK.
-2. **It shows what it understood.** "Order at 15:00, shop closes at 18:00: today it is accepted, after the change it is refused." It also asks what the code can't tell it: "Can staff still order after the limit? I think yes." You answer. ⛔
-3. **It proposes how to build it.** Your choices are numbered, including every new name: "Error name? a) `ORDER_CUTOFF` b) `TOO_LATE`. I pick a." You pick. ⛔ With nothing to decide, it skips this stop.
-4. **It writes a short plan:** which functions change, the tests and the size: "+40/-5, 2 files. Simpler option rejected: …". Exact code only for database changes, permission checks and public contracts. Nothing is changed yet. You approve. ⛔
-5. **It writes the code as planned,** with tests first, cleans up what it touched, then shows you the changes in 5 lines or fewer. If it needs anything else, it stops and asks. You correct an error message on the way; it fixes it and quietly notes this in `learn.md`. ⛔
-6. **You approve and it commits.** It then drafts the changelog line, the message to whoever needs to know and the deploy checklist. You send and deploy.
-7. **It learns, if you agree.** "You corrected my error message. Should I add a rule: reuse the wording already in the file?" You say yes or no. ⛔
+1. Claude reads the code: "This is a Change, about 3 files." You say OK.
+2. It shows an example: "Order at 15:00, shop closes at 18:00: today accepted, after refused." It asks what only you know: "Can staff still order late? My answer: yes." ⛔
+3. It proposes how to build it, with every new name: "Error name? a) `ORDER_CUTOFF` b) `TOO_LATE`. My pick: a." ⛔ Nothing to decide → no stop.
+4. It writes a short plan: functions, tests, size ("+40/-5, 2 files"). ⛔
+5. It writes the tests, then the code, then shows the diff. ⛔
+6. You approve; it commits and drafts the changelog, the notice and the deploy list.
+7. It proposes what to learn: "You fixed my error message. Rule: reuse the wording in the file?" ⛔
 
-⛔ means Claude stops and waits for you. Type `/next` to go to the next step.
-
-All of this is saved in one folder, `docs/changes/2026-11-12-order-cutoff/`. Six months later, you can still read why it was done.
+⛔ = Claude stops and waits. `/next` goes on. Everything is saved in `docs/changes/2026-11-12-order-cutoff/`.
 
 ## How it works
 
-Claude Code reads a folder in your home, `~/.claude`, in every project. The kit plugs into that folder with shortcuts, so all projects see the same kit.
-
-```text
-                     ~/dev/trunks-spec   (how we work)
-                            │
-              install.sh creates shortcuts
-                            │
-                        ~/.claude
-                   ┌────────┴────────┐
-                Project A         Project B
-         CLAUDE.md: its facts    CLAUDE.md: its facts
-```
-
 The kit says **how to work**. Each project says **its facts**.
 
-| Lives in the kit | Lives in the project |
-|---|---|
-| How Claude talks and asks | What the project is and how it is built |
-| The types of work and their steps | Its commands and test rules |
-| Commands like `/work` and `/next` | Its deploy steps |
-| Templates for documents | The filled documents: bugs, changes, features |
-| Packs for one technology | Which pack it uses, if any |
+```text
+~/dev/trunks-spec ──install.sh──▶ ~/.claude ──▶ every project
+                                               (its CLAUDE.md: its facts)
+```
 
-**Example.** The kit says "run the tests". Project A's `CLAUDE.md` says `make test`. Project B's says `npm test`. The same step works in both.
+**Example:** the kit says "run the tests". Project A says `make test`; project B says `npm test`.
 
-A project's facts go in its `CLAUDE.md`, under a `## Project rules` heading. A project with that heading uses the full process. Any other project gets only the rules for short answers, asking and simple code, unless you type `/work`.
+A project's facts go in its `CLAUDE.md`, under `## Project rules`. With that heading, the project uses the full process. Without it, only the rules for replies, questions and simple code apply.
 
-**Any technology.** The core never names a language or a database. For exact rules on one technology, a project can use a pack: today there is one, [SQL Server](workflow/packs/sql-server/README.md), and [adding one is easy](workflow/packs/README.md).
+The core names no language or database. For one technology, a project can use a pack: today [SQL Server](workflow/packs/sql-server/README.md) ([add one](workflow/packs/README.md)).
 
 ## Daily use
 
 | You type | What happens |
 |---|---|
-| `/work <what you want>` | Claude picks the type of work, you confirm, and it starts |
-| `/next` | Runs the next step of the open work |
-| `/work status` | Lists all open work and what comes next |
+| `/work <what you want>` | Claude picks the type of work, you confirm, it starts |
+| `/next` | The next step of the open work |
+| `/work status` | All open work and what comes next |
 
-You never need other commands: `/next` finds the right step.
+| Type of work | When | Document |
+|---|---|---|
+| Question | you want to understand something | none |
+| Trivial | obvious, 2 code files or fewer, no database or contract change | none |
+| Bug | it doesn't work as it should | `bug.md` |
+| Change | it works, but should work differently | `change.md` |
+| Small feature | something new, one piece | `feature.md` |
+| Big feature | something new, several pieces (slices) | one folder |
 
-| Type of work | When | Document | You approve |
-|---|---|---|---|
-| **Question** | You want to understand something | None | Nothing |
-| **Trivial** | Small and obvious, 2 code files or fewer, no database or contract change | None | The change, then the result |
-| **Bug** | It doesn't work as it should | `bug.md` | The cause, the fix, the plan, the result, what to learn |
-| **Change** | It works, but should work differently | `change.md` | The scope, the solution, the plan, the result, what to learn |
-| **Small feature** | Something new, about 10 files or fewer | `feature.md` | The needs, the solution, the plan, the result, what to learn |
-| **Big feature** | Something new, several stories | One folder, built piece by piece | The same, for each piece |
-
-**Words you will see:**
-- **Track:** a type of work from the table above.
-- **Item:** one piece of work and its document.
-- **Slice:** one piece of a big feature, built and checked on its own.
-- **Project rules:** the facts of one project, in its `CLAUDE.md`.
-- **Pack:** the exact rules and templates for one technology.
-
-**Tips:**
-- Claude writes too much? Say *"short"*.
-- It asks what the code can answer? Say *"look first"*.
-- It moved on without you? Say *"follow the STOP steps"*.
-
-## How Claude learns
-
-Corrections shouldn't break your flow, and rules shouldn't change behind your back. So learning happens at the end.
-
-1. **During the work:** each time you correct Claude, it adds one line to `learn.md` in the item's folder. No message, no question, no rule changed.
-2. **At the end, in the learn step:** it proposes each remark, with the exact text and where it goes: the kit, the project, a test.
-3. **You decide.** You say yes or no to each one. Only your yeses are added, and `learn.md` keeps the record.
+**Tips:** too long → *"short"*. Asks what the code says → *"look first"*. Moved on without you → *"follow the STOP steps"*.
 
 ## Setup
 
@@ -124,60 +76,34 @@ git clone https://github.com/Khouini/trunks-spec.git ~/dev/trunks-spec
 ~/dev/trunks-spec/install.sh
 ```
 
-Then start a new Claude Code session. `install.sh` does three things in `~/.claude`:
-- adds one line to `CLAUDE.md` that loads the kit's rules;
-- creates shortcuts to the commands, helpers and templates;
-- lets Claude read the kit without asking (it backs up `settings.json` first).
+Start a new Claude Code session. `install.sh` adds one line to `~/.claude/CLAUDE.md`, links the commands and templates, and lets Claude read the kit (it backs up `settings.json` first). Anything in the way → it stops and changes nothing. `install.sh --uninstall` removes only what it added.
 
-If something is already in the way, it stops and changes nothing.
+**Add a project:** open it and type `/work <anything>`. Claude offers to fill `## Project rules` from the code. You check it.
 
-To remove it:
-
-```bash
-~/dev/trunks-spec/install.sh --uninstall
-```
-
-This removes only what the kit added. Your own lines stay.
-
-**Add a project:** open it and type `/work <anything>`. Claude offers to add `## Project rules`, filled from what it sees in the code. You check it.
-
-**Stop check (a project can turn it on):** a hook that runs your tests when Claude finishes and the code changed. If they fail, Claude hears it and must fix them or say why they fail. [Set it up](workflow/PROJECT_RULES_TEMPLATE.md).
+**Stop check (optional):** a hook runs your tests when Claude finishes. If they fail, Claude must fix them or say why. [Set it up](workflow/PROJECT_RULES_TEMPLATE.md).
 
 ## Keep it up to date
 
-- **Change a rule that fits every project:** edit it in the kit, run `./check.sh`, add a line to `CHANGELOG.md`, commit and push. New sessions use it. Other machines run `git pull`.
-- **Change a fact about one project:** edit that project's `CLAUDE.md`.
-- `./check.sh` fails if the core names one technology, if a file the kit names is missing, if a command lost its safety line or if the stop hook broke. After changing a rule, `tests/work.sh` checks that `/work` still picks the right track (real Claude runs, so it costs tokens). To keep your own company words out, list them in `.check-words.local`, which is never committed.
-
-**Example:** "ask about every new name" goes in the kit. "Tests run with `make test`" goes in the project.
+- **A rule for every project:** edit the kit, run `./check.sh`, add a `CHANGELOG.md` line, commit. Other machines: `git pull`.
+- **A fact about one project:** edit that project's `CLAUDE.md`.
+- `./check.sh` fails if the core names a technology, a named file is missing, a command lost its guard, or a private word (`.check-words.local`) got in. `tests/work.sh` checks that `/work` picks the right track (real runs, costs tokens).
 
 ## Good to know
 
-- **The kit lives on your machine.** A cloud session, a new machine or a colleague has no `/work` until the kit is installed there. Project rules travel with the project; the kit doesn't.
-- **A kit edit reaches all projects at once.** Work in progress continues under the new rules.
-- **Project rules only add.** If they contradict the kit, Claude may follow either one.
-- **A project can add a command but can't replace one.** With the same name as a kit command, the kit wins. For the two helpers (`code-reviewer`, `test-engineer`) it's the opposite: the project's copy wins.
-- **The kit doesn't send or deploy anything.** You do.
+- The kit lives on your machine. A new machine or a colleague needs `install.sh`.
+- A kit edit reaches all projects at once.
+- Project rules only add. A contradiction makes Claude unpredictable.
+- A project can add a command, not replace one. For `code-reviewer` and `test-engineer`, the project's copy wins.
 
 ## What's inside
 
 | Path | What |
 |---|---|
-| `CLAUDE.md` | The global rules: how Claude talks and asks, types of work |
-| `skills/` | The commands, like `/work` and `/plan-fix` |
-| `agents/` | The helpers: `code-reviewer`, `test-engineer` |
-| `workflow/steps/` | How Claude does each step |
-| `workflow/templates/` | The document templates |
-| `workflow/packs/` | Exact rules for one technology: [see them](workflow/packs/README.md) |
-| `workflow/WORKFLOW.md` | The full manual: [read it](workflow/WORKFLOW.md) |
-| `workflow/database.md` | The rules for any database change: [see them](workflow/database.md) |
-| `workflow/PROJECT_RULES_TEMPLATE.md` | What a project fills in: [see it](workflow/PROJECT_RULES_TEMPLATE.md) |
-| `workflow/handover-package.md` | How to hand work over to other developers: [see it](workflow/handover-package.md) |
-| `workflow/hooks/stop-check.sh` | The stop check |
-| `install.sh`, `check.sh`, `tests/` | Install the kit, check the kit, test how it behaves |
+| `CLAUDE.md` | The rules loaded everywhere: replies, questions, code, tracks |
+| `workflow/WORKFLOW.md` | [The manual](workflow/WORKFLOW.md): every track step by step |
+| `skills/`, `agents/` | The commands (`/work`, `/next`…) and the 2 helpers |
+| `workflow/steps/`, `workflow/templates/` | How each step runs, and the document templates |
+| `workflow/packs/`, `workflow/database.md` | Rules for one technology, and for any database change |
+| `install.sh`, `check.sh`, `tests/` | Install, check, test |
 
-## Help make it better
-
-The kit grows from real work. Read [CONTRIBUTING](CONTRIBUTING.md), see what changed in the [CHANGELOG](CHANGELOG.md) and what's next in the [ROADMAP](ROADMAP.md).
-
-MIT License. Made by Trunks.
+Read [CONTRIBUTING](CONTRIBUTING.md), the [CHANGELOG](CHANGELOG.md) and the [ROADMAP](ROADMAP.md). MIT License. Made by Trunks.

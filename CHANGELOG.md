@@ -2,6 +2,21 @@
 
 What changed, newest first. Versions: a new step, track or rule that changes how you work adds to the middle number; a small fix adds to the last.
 
+## 0.3.0 (2026-11-11)
+
+Less to read, fewer stops.
+
+### Changed
+- `CLAUDE.md` keeps only what is needed every time (118 → 54 lines). Tracks and phases live in `WORKFLOW.md` only.
+- Templates are one line per field: bug, change, small feature and slice (497 → 194 lines). Section numbers are the same.
+- 4 client-email commands become 2: `/read-client-emails` (clean copy + analysis), `/email-client` (questions or validation).
+- A mechanical change with nothing to decide has one stop, at the diff.
+- `learn.md`: one line per note. An applied note changes a line, it doesn't add one.
+- Saving to git: list the files first, stage only your own. Saying a doc lacks something: name the pages read.
+
+### Removed
+- The status table in `WORKFLOW.md`: each item's `Next:` line says the next step.
+
 ## 0.2.1 (2026-11-11)
 
 ### Changed
