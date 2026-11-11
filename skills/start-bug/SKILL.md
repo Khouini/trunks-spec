@@ -9,7 +9,7 @@ Nothing is fixed here. This step only records what was reported.
 
 Follow `~/.claude/workflow/steps/intake.md` (track: bug), with these bug-specific parts:
 
-1. **§1 "Report"** of `bug.md`: symptom (short quote), expected, actual, the where/when table, steps to reproduce. The report can be pasted text, an `.eml`, a log extract, a screenshot or IDs.
+1. **§1 "Report"** of `bug.md`: symptom (short quote), expected, actual, the where/when line, steps to reproduce. The report can be pasted text, an `.eml`, a log extract, a screenshot or IDs.
 2. **Severity:** propose P1 / P2 / P3 with the reason in one line; I correct it if wrong.
    - P1 = hotfix mode (`~/.claude/workflow/WORKFLOW.md`, "Bug"). Propose a mitigation if one exists: redeploy the previous commit, undo the last database change (the `UNDO:` line of each file), and Project rules: Deploy. Don't apply anything.
 3. **Quick triage:** if it clearly works as designed (→ change) or is a new need (→ feature), say so and propose the move (`intake.md`, "Moving an item") or a reply to the reporter. If unsure, continue; the investigation decides.

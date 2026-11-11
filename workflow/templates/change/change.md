@@ -1,126 +1,50 @@
 # Change: <short title>
 
-- **Status:** Requested → Scope → Scoped → Solution → Plan → Approved → Built → Committed → Shipped (or: Moved to <track> / Dropped)
+- **Status:** Requested → Scope → Scoped → Solution → Plan → Approved → Built → Committed → Shipped (or Moved / Dropped)
 - **Next:** understand + impact
-- **Requested by:** <role>, <client>, YYYY-MM-DD (raw: `.correspondence/<client>/<change-folder>/`)
-- **Branch:**
-- **Ticket:**
-- **Commit:**
-- **Version:**
+- **Requested by:** <role>, <client>, YYYY-MM-DD · **Branch:** · **Ticket:** · **Commit:** · **Version:**
 
-> Gates: you confirm the scope (§1-§2), decide the solution (§3) if there is something to decide, and approve the plan (§4). Nothing is applied before §4 is **Approved**. Any difference from it stops for your approval and goes in §5.
+> You confirm the scope (§1-§2), decide the solution (§3) and approve the plan (§4). Nothing is applied before §4. A difference goes in §5.
 
-## 1. Request ⛔ confirmed by you
-
-**Asked** (short quote):
-
-**Current behavior** (`file:line`):
-
-**Wanted behavior:**
-
-### Before / after examples
-| # | Case | Input | Today | After the change |
-|---|---|---|---|---|
-| EX-1 | normal | | | |
-| EX-2 | edge | | | |
-| EX-3 | failure | | | |
-
-**Recorded decision behind today's behavior** (`docs/decisions/`): none | <ADR>
-
-**TO ASK** (only what the code, docs and git can't answer; each with your proposed answer):
+## 1. Request ⛔
+- **Asked:** <short quote> · **Today** (`file:line`): · **Wanted:**
+- **Examples** (they become the tests): EX-1 normal: <input> → today <x> → after <y> · EX-2 edge · EX-3 failure
+- **Decision behind today's behavior** (`docs/decisions/`): none | <ADR>
+- **To ask** (each with your answer):
 
 ## 2. Impact
+- **Call path:** `<entry>` → `<handler>` → `<service>` (`file:line`) → `<data>`
+- **Who sees the difference** (Project rules: Who sees the difference): one line each
+- **Code and database:** <object> → <change>, consumers checked
+- **Public contract:** no | yes: <what>, notice to its users
+- **Existing data:** only new rows | backfill (Qn → N rows)
+- **Risks, tests today, docs to update:**
+- **Size:** N files → fits a change | move to <track>
 
-### Call path
-`<entry point>` → `<validation>` → `<handler>` → `<service func>` (`file:line`) → `<data>` (latest version: <source>)
+## 3. Solution ⛔
+- **What you want:** <your words>
+- **Questions** (every choice and new name, 2-3 options with an example, your pick): 1. <question>: a) … b) …  Pick: a (<why>).
+- **Decisions:** 1. <decision>
 
-### Who sees the difference
-| Who | Affected? | How |
-|---|---|---|
-| <each row of Project rules: Who sees the difference> | | |
+## 4. Plan ⛔
+- **Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
+- **Code:** `<file>`: `<func>` <current → new signature>, <what changes>
+- **Exact code** (permission checks and public contracts only): current (`file:line`) → new
+- **Database change:** <file> · undo · before or with the deploy
+- **Data change:** rows <condition>, preview Qn → N, old values kept in <where>
+- **Tests:** `"CHANGE: <EX-1 …>"`: <input> → <expected>; fails today because <why>. Not reachable → test-guide scenario + runnable request.
+- **Docs to update, not changed on purpose:**
 
-### Code and database
-| Object (file / table / contract) | Change | Consumers checked (Project rules: Consumers to check) |
-|---|---|---|
+## 5. Deviations
+<plan said> → <done instead>, <why>, approved <date>
 
-- **Public contract change:** no | yes: <what> → notice to whoever uses it, docs
-- **Existing data:** follows the new rule? <only new rows | backfill: diagnostics Qn → N rows>
-- **Docs to update:**
-- **Tests today / gaps:**
-- **Risks:**
-- **Size:** <N files> → fits a change | move to <track>
-
-## 3. Solution ⛔ decided by you
-
-### What you want
-<your words>
-
-### Questions
-Every implementation choice and every new name (API fields, columns, commands, error codes, types): 2-3 options, each with an example, and a pick.
-1. <question>: a) <option> → <example>; b) <option> → <example>. Pick: <letter> (<why>).
-
-### Decisions
-| # | Question | Your decision |
-|---|---|---|
-
-## 4. Plan ⛔ approved by you
-
-**Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
-
-### Code
-| File | Function: signature (current → new) | What changes | Reuses |
-|---|---|---|---|
-
-### Exact code (only permission checks and public contracts; remove if none)
-**Current** (`<file>:<line>`)
-```
-```
-
-**New**
-```
-```
-
-### Database change (if any)
-| # | File | What | Undo | Before or with the code deploy? |
-|---|---|---|---|---|
-
-### Data change (if decided)
-- Rows: <condition>; preview diagnostics Qn → <N> rows
-- Script (full), where old values are kept, `UNDO:` line:
-```
-```
-
-### Tests
-| Test (`"CHANGE: …"`) / scenario | Example | Input | Expected | Fails before because |
-|---|---|---|---|---|
-
-For what the suite can't reach: test-guide scenario + runnable request (diagnostics query only if stored data is wrong).
-
-### Docs to update
-
-### Not changed (on purpose)
-
-## 5. Deviations (approved while applying)
-| Plan said | Done instead | Why | Approved |
-|---|---|---|---|
-
-## 6. Plan vs done (filled at hand-over)
-| Change / test / database | Where | Status |
-|---|---|---|
+## 6. Plan vs done
+<plan item> → <where> → done / not done
 
 ## 7. Ship
-
-### Notice to whoever sees the difference (draft, not sent)
-
-### Deployment checklist
-- [ ] Backup (if a database change or data change)
-- [ ] Database change applied in production (set README order); data change rows before → after:
-- [ ] Deployed (Project rules: Deploy), logs checked
-- [ ] Other repos deployed (if touched)
-- [ ] Verified: examples EX-n on production, runnable requests
-- [ ] What Project rules: Deploy says to regenerate (if the database changed)
-
-**Undo:** the `UNDO:` lines of the database files in reverse order, previous commit redeployed.
+- **Notice** to whoever sees the difference (draft, not sent):
+- **Checklist:** backup · database change in prod · deploy (Project rules: Deploy) · other repos · EX-n checked in prod
+- **Undo:** the `UNDO:` lines in reverse order, previous commit redeployed.
 
 ## 8. Learn
-Claude's remarks: `learn.md` in this folder. Applied only after your yes.
+`learn.md` in this folder.

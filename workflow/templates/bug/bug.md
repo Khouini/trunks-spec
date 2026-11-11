@@ -1,151 +1,54 @@
 # Bug: <short title>
 
-- **Status:** Reported → Investigating → Cause confirmed → Solution → Plan → Approved → Fixed → Shipped (or: Not a bug / Moved to change / Moved to feature)
+- **Status:** Reported → Investigating → Cause confirmed → Solution → Plan → Approved → Fixed → Shipped (or Not a bug / Moved)
 - **Next:** /investigate-bug
-- **Severity:** P1 (production blocked, or data getting corrupted now) | P2 (wrong behavior, a workaround exists) | P3 (minor)
-- **Reported by:** <role>, <client>, YYYY-MM-DD (raw: `.correspondence/<client>/<bug-folder>/`)
-- **Environment:** production | development
-- **Branch:**
-- **Ticket:**
-- **Commit:**
-- **Version:**
+- **Severity:** P1 (blocked, or data getting corrupted now) | P2 (wrong, a workaround exists) | P3 (minor)
+- **Reported by:** <role>, <client>, YYYY-MM-DD · **Environment:** · **Branch:** · **Ticket:** · **Commit:** · **Version:**
 
-> Gates: you confirm the root cause (§3), decide the solution (§5) if there is something to decide, and approve the plan (§6). Nothing is applied before §6 is **Approved**. Any difference from it stops for your approval and goes in §7.
+> You confirm the cause (§3), decide the fix (§5) and approve the plan (§6). Nothing is applied before §6. A difference goes in §7.
 
 ## 1. Report
-
-**Symptom** (what the reporter sees, short quote):
-
-**Expected:**
-
-**Actual:**
-
-| Item | Value (from the report; unknown → `/investigate-bug` finds it, not a question) |
-|---|---|
-| Where (screen, endpoint, command, job, email) | |
-| Business IDs | |
-| First seen | |
-| Since a deploy or a database change? | |
-| Always, or only for some users or data? | |
-
-**Steps to reproduce:**
-1.
-
-**TO ASK** (only what the code, docs and git can't answer; each with your proposed answer):
+- **Symptom:** <short quote> · **Expected:** · **Actual:**
+- **Where, IDs, first seen, since a deploy?, for everyone?:** (unknown → `/investigate-bug` finds it)
+- **Steps to reproduce:** 1.
+- **To ask** (only what code, docs and git can't answer, each with your answer):
 
 ## 2. Investigation
+- **Call path:** `<entry>` → `<handler>` → `<service>` (`file:line`) → `<data>`
+- **Hypotheses:** H1 <what> → <how checked> → <result>
+- **Evidence:** E1 <source `file:line`, query Qn, log> → <what it shows>
 
-### Call path
-`<entry point>` → `<validation>` → `<handler>` → `<service func>` (`file:line`) → `<data>` (latest version: <source>)
-
-### Hypotheses
-| # | Hypothesis | How to check | Result |
-|---|---|---|---|
-| H1 | | | |
-
-### Evidence
-| # | Source (code `file:line`, diagnostics Qn, log, store, git) | What it shows |
-|---|---|---|
-| E1 | | |
-
-## 3. Root cause ⛔ confirmed by you
-
-- **Type:** code | database logic | data | config / environment | external system | works as designed → feature
-- **Cause:** <X happens because Y>
-- **Where:** `file:line`
-- **Since:** <commit / database change / date, and how it was found>
-- **Explains every symptom?** yes / no: <what is still unexplained>
-- **Why it wasn't caught:**
+## 3. Root cause ⛔
+- **Cause:** <X happens because Y> at `file:line`. **Type:** code | database logic | data | config | external | works as designed
+- **Since:** <commit / date> · **Explains every symptom?** yes / no: <what not> · **Why not caught:**
 
 ## 4. Blast radius
+Other callers · other repos (Project rules: Consumers to check) · data already wrong · already sent wrong. One line each, "none" if none.
 
-| Area | Affected? | Detail |
-|---|---|---|
-| Other callers of the same code | | |
-| Other repos (Project rules: Consumers to check) | | |
-| Data already wrong (count only if a repair is decided) | | |
-| Other users / data / dates | | |
-| Already sent wrong (Project rules: Who sees the difference) | | |
+## 5. Solution ⛔
+- **What you want:** <your words>
+- **Options:** A <what changes, risk, size> · B …  **Recommendation:** <A, why>
+- **Decisions:** where the fix goes · repair existing data (which rows) · a guard so it can't come back
 
-## 5. Solution ⛔ decided by you
+## 6. Plan ⛔
+- **Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
+- **Code:** `<file>`: `<func>` <current → new signature>, <what changes>
+- **Exact code** (permission checks and public contracts only): current (`file:line`) → new
+- **Database change:** <file> · undo · before or with the deploy · consumers checked
+- **Data repair:** rows <condition>, preview Qn → N rows, old values kept in <where>, script in <file>
+- **Regression test:** <name>: <input> → <expected>; fails today because <why>. Not reachable → manual scenario + runnable request.
+- **Not changed on purpose:**
 
-### What you want
-<your words: how you want it fixed>
+## 7. Deviations
+<plan said> → <done instead>, <why>, approved <date>
 
-### Options
-| # | Option | What changes | Pros | Cons / risk | Size |
-|---|---|---|---|---|---|
-| A | | | | | |
-
-**Recommendation:** <option, why>
-
-### Decisions
-| # | Question | Decision |
-|---|---|---|
-| 1 | Where the fix goes (which layer) | |
-| 2 | Repair existing data? Which rows? | |
-| 3 | Guard so it can't come back? | |
-
-## 6. Plan ⛔ approved by you
-
-**Size:** +N/-M, N files. Simpler option rejected: <what, why> | none.
-
-### Code
-| File | Function: signature (current → new) | What changes | Reuses |
-|---|---|---|---|
-
-### Exact code (only permission checks and public contracts; remove if none)
-**Current** (`<file>:<line>`)
-```
-```
-
-**New**
-```
-```
-
-### Database change (if any)
-| # | File | What | Undo | Before or with the code deploy? |
-|---|---|---|---|---|
-
-**Consumers checked** (if a query, schema or contract changes): Project rules: Consumers to check.
-
-### Data repair
-- Rows: <condition>; preview diagnostics Qn → <N> rows on production
-- Old values kept in:
-- Script (full):
-```
-```
-
-### Regression test
-| Test | Input | Expected | Fails before the fix because |
-|---|---|---|---|
-
-For what the suite can't reach: manual scenario + runnable request (diagnostics Qn only if stored data is wrong).
-
-### Not changed (on purpose)
-
-## 7. Deviations (approved while applying)
-| Plan said | Done instead | Why | Approved |
-|---|---|---|---|
-
-## 8. Plan vs done (filled at hand-over)
-| Change / test / database | Where | Status |
-|---|---|---|
+## 8. Plan vs done
+<plan item> → <where> → done / not done
 
 ## 9. Ship
-
-### Reply to the reporter (draft, not sent)
-
-### Deployment checklist
-- [ ] Backup (if a database change or data repair)
-- [ ] Database change applied in production (set README order); data repair rows before → after:
-- [ ] Deployed (Project rules: Deploy), logs checked
-- [ ] Other repos deployed (if touched)
-- [ ] Verified: reported IDs checked (diagnostics Qn → expected result, if any)
-- [ ] What Project rules: Deploy says to regenerate (if the database changed)
-- [ ] Kept data cleanup planned (date):
-
-**Undo:** the `UNDO:` lines of the database files in reverse order (data restored from where it was kept), previous commit redeployed.
+- **Reply to the reporter** (draft, not sent):
+- **Checklist:** backup · database change in prod (rows before → after) · deploy (Project rules: Deploy) · other repos · verified on the reported IDs
+- **Undo:** the `UNDO:` lines in reverse order, previous commit redeployed.
 
 ## 10. Learn
-Claude's remarks: `learn.md` in this folder. Applied only after your yes.
+`learn.md` in this folder.
