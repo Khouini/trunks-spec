@@ -24,8 +24,8 @@ Every track is a recipe over the same eight steps (`~/.claude/workflow/steps/`),
 
 | Step | Trivial | Bug | Change | Small feature | Big feature |
 |---|---|---|---|---|---|
-| **intake**: record the request | | `/start-bug` | `/work` | `/work` | `/start-feature`, `/extract-client-requirements` |
-| **understand** ⛔ | | `/investigate-bug`: root cause | current vs wanted | light requirements (+ `/client-validation` if needed) | `/analyze-client-emails`, (`/client-questions`), `/write-requirements`, `/client-validation` |
+| **intake**: record the request | | `/start-bug` | `/work` | `/work` | `/start-feature`, `/read-client-emails` |
+| **understand** ⛔ | | `/investigate-bug`: root cause | current vs wanted | light requirements (+ `/email-client` if needed) | `/read-client-emails`, (`/email-client`), `/write-requirements`, `/email-client` |
 | **impact** | | blast radius, in `/investigate-bug` | with understand | with decide | `/impact-analysis` |
 | **decide** ⛔ | | `/plan-fix` | ✓ | ✓ (architecture + code) | `/design-feature`, then `/build-slice` per slice |
 | **plan** ⛔ | exact code, in chat | `/plan-fix`: short plan | short plan | short plan | `/build-slice`: slice plan |
@@ -93,7 +93,7 @@ Something new that fits one slice. Everything in **one file**: `docs/features/YY
 
 | # | You type | Claude writes | Your job | Gate |
 |---|---|---|---|---|
-| 1 | `/work <the new need>` | §1 request · §2 stories, rules, examples (normal, edge, failure), out of scope | Review the examples: they become the tests. Client must confirm? `/client-validation` drafts the email | ⛔ requirements |
+| 1 | `/work <the new need>` | §1 request · §2 stories, rules, examples (normal, edge, failure), out of scope | Review the examples: they become the tests. Client must confirm? `/email-client` drafts the email | ⛔ requirements |
 | 2 | `/next` | §3 impact · §4 options for architecture and code, decisions | Decide | ⛔ if there is something to decide |
 | 3 | `/next` | §5 short plan: size line, the database change, types, signatures, entry point, public contract, files, tests | Review the plan | ⛔ |
 | 4 | `/next` | tests → database change → code as §5 → verify → docs, runnable requests → §7 plan vs done | 👤 Apply the database change on dev, review the diff | ⛔ diff |
@@ -101,16 +101,15 @@ Something new that fits one slice. Everything in **one file**: `docs/features/YY
 | 6 | `/next` | learn: Claude's remarks from `learn.md`, each with the exact text to add | Say yes or no to each | ⛔ each remark |
 
 ## Big feature
-Something with several stories. One folder `docs/features/YYYY-MM-<name>/` with one file per phase. No client emails (your own idea, an issue)? Skip phases 2, 3, 3b and 5, and start `/write-requirements` from your description.
+Something with several stories. One folder `docs/features/YYYY-MM-<name>/` with one file per phase. No client emails (your own idea, an issue)? Skip phases 2, 3 and 5, and start `/write-requirements` from your description.
 
 | # | You type | Claude writes | Your job | Gate |
 |---|---|---|---|---|
 | 1 | `/start-feature <name> for <client>` | the folder + index row | Correct the branch if wrong. 👤 Drop the emails in `.correspondence/` | |
-| 2 | `/extract-client-requirements` | `00-client-requirements.md` (step 0) | Check nothing the client sent is missing | |
-| 3 | `/analyze-client-emails` | `01-email-analysis.md` | Check the open questions | |
-| 3b | `/client-questions` (optional) | `01b-client-questions.md` (email draft) | 👤 Send it, paste the answers back | ⛔ client answers |
+| 2 | `/read-client-emails` | `00-client-requirements.md` (the clean copy), then `01-email-analysis.md` | Check nothing is missing, and the open questions | |
+| 3 | `/email-client` (optional questions) | `01b-client-questions.md` (email draft) | 👤 Send it, paste the answers back | ⛔ client answers |
 | 4 | `/write-requirements` | `02-requirements.md` | Review stories, rules, examples | ⛔ |
-| 5 | `/client-validation` | `03-client-validation.md` (email draft) | 👤 Send it, paste the answers back | ⛔ client confirms |
+| 5 | `/email-client` (validation) | `03-client-validation.md` (email draft) | 👤 Send it, paste the answers back | ⛔ client confirms |
 | 6 | `/impact-analysis` | `04-impact-analysis.md` | Check the risks | |
 | 7 | `/design-feature` | architecture choices → `05-design.md` + `progress.md` | Decide the choices, review DB design and slices | ⛔ choices, ⛔ design |
 | 8 | `/build-slice` (repeat) | implementation choices → `slices/slice-N.md` → code, tests, database change, docs | Decide how it's coded, approve the plan, 👤 apply the database change on dev, review the diff | ⛔ choices, ⛔ plan, ⛔ diff |
@@ -121,7 +120,7 @@ Something with several stories. One folder `docs/features/YYYY-MM-<name>/` with 
 - **A slice** is one part of the feature built end to end (database, code, tests, docs), small enough to really review, leaving the system working. Example for a discount feature: slice 1 = create and list discounts, slice 2 = apply them to orders, slice 3 = reports.
 - **Three levels of validation before code:** the feature design (`05-design.md`: architecture, data model, public surface, slices), the slice choices (in chat: reuse vs new, where validation lives, error codes), the slice plan (`slices/slice-N.md`: exact types, signatures, database inputs and outputs, query logic, files, tests).
 - **One slice per session.** `/clear` between slices; every session starts from `progress.md` and the current slice plan.
-- **Client questions (optional):** when the answers to the open questions of `01-email-analysis.md` change the requirements, ask them first: `/client-questions` drafts the email in `01b-client-questions.md`; 👤 you send it and paste the answers back; Claude records them in `00` and `01`, then `/write-requirements`. Questions that don't change the requirements go out later, with the requirements, in `/client-validation`.
+- **Client questions (optional):** when the answers to the open questions of `01-email-analysis.md` change the requirements, ask them first: `/email-client` drafts the email in `01b-client-questions.md`; 👤 you send it and paste the answers back; Claude records them in `00` and `01`, then `/write-requirements`. Questions that don't change the requirements go out later, with the requirements, in `/email-client`.
 - **Client validation:** Claude drafts the email in `03-client-validation.md`; 👤 you put the names in and send it; when the client answers, paste it: *"client answered: …"*. Claude updates the requirements.
 
 ---

@@ -10,8 +10,8 @@ If the size is unclear, run `/work` first: a feature that fits one slice is a **
 Follow `~/.claude/workflow/steps/intake.md` (track: big feature), with these feature-specific parts:
 - No client emails (your own idea, an issue): skip the email phases, `Next: /write-requirements` from my description.
 - Inputs: the feature name (ask if missing), client name(s), optional ticket ID.
-- Fill the feature README: name, client(s), status "Analysis", start date, `Next: /extract-client-requirements`. Record the branch in `Branch:` (`feature/<short-name>` or the default branch: "no feature branch"); `/build-slice` and `/final-review` read it.
+- Fill the feature README: name, client(s), status "Analysis", start date, `Next: /read-client-emails`. Record the branch in `Branch:` (`feature/<short-name>` or the default branch: "no feature branch"); `/build-slice` and `/final-review` read it.
 - Tell me where to put the raw emails: `.correspondence/<client>/<folder>/` (created, git-ignored).
 
 ## Output
-The new folder, the index row, the branch decision, and the next step: `/extract-client-requirements` (step 0) once the emails are in `.correspondence/`.
+The new folder, the index row, the branch decision, and the next step: `/read-client-emails` (step 0) once the emails are in `.correspondence/`.

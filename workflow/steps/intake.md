@@ -8,7 +8,7 @@ Nothing is fixed or designed here. This step records what was asked and creates 
 | Bug | `docs/bugs/YYYY-MM-DD-<name>/` | `~/.claude/workflow/templates/bug/bug.md` (`diagnostics.md` only later, when a query is really needed) | `docs/bugs/README.md` | Reported |
 | Change | `docs/changes/YYYY-MM-DD-<name>/` | `~/.claude/workflow/templates/change/` (`change.md`) | `docs/changes/README.md` | Requested |
 | Small feature | `docs/features/YYYY-MM-<name>/` | `~/.claude/workflow/templates/feature-small/` (`feature.md`); `test-guide.md` from `~/.claude/workflow/templates/feature/` once behavior needs manual scenarios | `docs/features/README.md`, Track `small` | Requested |
-| Big feature | `docs/features/YYYY-MM-<name>/` | `~/.claude/workflow/templates/feature/`, except `slices/slice-N.md` (leave `slices/` empty) and `01b-client-questions.md` (only when `/client-questions` runs) | `docs/features/README.md`, Track `big` | Analysis |
+| Big feature | `docs/features/YYYY-MM-<name>/` | `~/.claude/workflow/templates/feature/`, except `slices/slice-N.md` (leave `slices/` empty) and `01b-client-questions.md` (only when `/email-client` runs) | `docs/features/README.md`, Track `big` | Analysis |
 
 ## Steps
 1. **Already open?** Check the three indexes for an open item on the same thing. If there is one, propose continuing it (`/next <item>`) instead.
@@ -18,7 +18,7 @@ Nothing is fixed or designed here. This step records what was asked and creates 
    - **no personal data**: never customer names, people's names, emails or phone numbers. Roles and IDs only;
    - **TO ASK**: what the code can't answer and the request doesn't say, each with your proposed answer (`1. Only the order cancel, not the invoice cancel? (the report names only orders)`). A question for the requester is a short draft, never sent.
 4. **Client file:** check `docs/clients/<client>.md` exists. If not, create it from `~/.claude/workflow/templates/client.md` and ask me only what isn't in the emails or older items.
-5. **Raw emails:** create `.correspondence/<client>/<folder>/` (git-ignored, never committed). If the request is long or has attachments (Word, PDF, Excel), run `/extract-client-requirements` for a clean copy (`00-client-requirements.md` in the item folder) and quote from it.
+5. **Raw emails:** create `.correspondence/<client>/<folder>/` (git-ignored, never committed). If the request is long or has attachments (Word, PDF, Excel), run `/read-client-emails` for a clean copy (`00-client-requirements.md` in the item folder) and quote from it.
 6. **Branch: a default, not a question.** The current branch (usually Project rules: Default branch) for a bug or a change; `feature/<name>` for a feature. Write it in one line; I correct it if needed. Record it in `Branch:`.
 7. **Index row** added (a missing `docs/<track>/README.md` index is created), status set, `Next:` filled.
 

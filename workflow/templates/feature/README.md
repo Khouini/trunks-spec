@@ -2,7 +2,7 @@
 
 - **Track:** big feature
 - **Status:** Analysis
-- **Next:** /extract-client-requirements
+- **Next:** /read-client-emails
 - **Client(s):**
 - **Owner:**
 - **Ticket:**

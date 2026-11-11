@@ -7,7 +7,7 @@ description: Turn the email analysis into business requirements with user storie
 
 ## Inputs
 - `01-email-analysis.md`
-- `01b-client-questions.md`, if the optional `/client-questions` phase ran: the client's answers (also merged into `00` §2 and `01`)
+- `01b-client-questions.md`, if the optional `/email-client` phase ran: the client's answers (also merged into `00` §2 and `01`)
 - `00-client-requirements.md`: the client's exact wording and values (tables, amounts, examples) to build the rules and examples from
 - `docs/clients/<client>.md`
 - How the system works today: the sources listed in `docs/system/README.md`, the code, and for logic in the database its **latest** version (Project rules: Database).
